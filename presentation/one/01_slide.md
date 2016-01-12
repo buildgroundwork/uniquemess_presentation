@@ -6,7 +6,7 @@
 !SLIDE
 # A familiar story...
 
-!SLIDE
+!SLIDE small
 # Band model
 
     @@@ Ruby
@@ -23,7 +23,7 @@
     class Person < ActiveRecord::Base
     end
 
-!SLIDE
+!SLIDE small
 # Membership model
 
     @@@ Ruby
@@ -36,7 +36,7 @@
 !SLIDE
 # Everything good?
 
-!SLIDE simple set up
+!SLIDE small
 
     @@@ Ruby
     band = Band.create(name: "Sonny Rollins Plus 4")
@@ -45,7 +45,7 @@
     max_roach = Person.create(name: "Max Roach")
     # => #<Person id: 1, name: "Max Roach"...>
 
-!SLIDE doing the save and validation works
+!SLIDE small
 
     @@@ Ruby
     band.memberships << Membership.new(person: max_roach)
@@ -63,7 +63,7 @@
 !SLIDE
 # Oops
 
-!SLIDE save with nested attributes
+!SLIDE small
 
     @@@ Ruby
     band.memberships_attributes =
@@ -71,14 +71,14 @@
     band.save!
     # => Success..?!
 
-!SLIDE
+!SLIDE small
 
     @@@ Ruby
     band.memberships.collect(&:valid?)
     # => [false, false]
 
     band.memberships.collect { |m| m.errors.full_messages }
-    # => [["Person has already been taken"], ["Person has already been taken"]]
+    # => [["Person has already been taken"], ["Person has...
 
 !SLIDE delete and re-add with nested attributes - cut this one?
 
