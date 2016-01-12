@@ -1,15 +1,87 @@
-!SLIDE 
-# My Presentation #
-
-!SLIDE bullets incremental
-# Bullet Points #
-
-* first point
-* second point
-* third point
+!SLIDE
+# What to Do When ActiveRecord Uniqueness Validations Fails
+## Jonathan Mukai-Heidt & Masha Rikhter
+## Groundwork Software
 
 !SLIDE
-# updog
+# A familiar story...
 
 !SLIDE
-# downdog
+# Band model
+
+    @@@ Ruby
+    class Band < ActiveRecord::Base
+      has_many :memberships
+      accepts_nested_attributes_for :memberships,
+        allow_destroy: true
+    end
+
+!SLIDE
+# Person model
+
+    @@@ Ruby
+    class Person < ActiveRecord::Base
+    end
+
+!SLIDE
+# Membership model
+
+    @@@ Ruby
+    class Membership < ActiveRecord::Base
+      belongs_to :band
+      belongs_to :person
+      validates :person_id, uniqueness: { scope: :band_id }
+    end
+
+!SLIDE
+# Everything good?
+
+!SLIDE simple set up
+
+    @@@ Ruby
+    band = Band.create(name: "Sonny Rollins Plus 4")
+    # => #<Band id: 1, name: "Sonny Rollins Plus 4"...>
+
+    max_roach = Person.create(name: "Max Roach")
+    # => #<Person id: 1, name: "Max Roach"...>
+
+!SLIDE doing the save and validation works
+
+    @@@ Ruby
+    band.memberships << Membership.new(person: max_roach)
+    # => Success!
+
+    band.memberships << Membership.new(person: max_roach)
+    # => false
+
+    band.memberships.last.errors.full_messages
+    # => ["Person has already been taken"]
+
+!SLIDE
+# Great!
+
+!SLIDE
+# Oops
+
+!SLIDE save with nested attributes
+
+    @@@ Ruby
+    band.memberships_attributes =
+      [ { person: max_roach }, { person: max_roach } ]
+    band.save!
+    # => Success..?!
+
+!SLIDE
+
+    @@@ Ruby
+    band.memberships.collect(&:valid?)
+    # => [false, false]
+
+    band.memberships.collect { |m| m.errors.full_messages }
+    # => [["Person has already been taken"], ["Person has already been taken"]]
+
+!SLIDE delete and re-add with nested attributes - cut this one?
+
+!SLIDE
+# ???
+
