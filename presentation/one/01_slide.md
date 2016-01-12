@@ -13,8 +13,7 @@
     @@@ Ruby
     class Band < ActiveRecord::Base
       has_many :memberships
-      accepts_nested_attributes_for :memberships,
-        allow_destroy: true
+      accepts_nested_attributes_for :memberships
     end
 
 !SLIDE
@@ -74,25 +73,14 @@
 
 !SLIDE small
 
+# Furthermore...
+
     @@@ Ruby
     band.memberships.collect(&:valid?)
     # => [false, false]
 
     band.memberships.collect { |m| m.errors.full_messages }
     # => [["Person has already been taken"], ["Person has...
-
-!SLIDE small
-
-# Furthermore...
-
-    @@@ Ruby
-    band.memberships_attributes =
-    [{ id: 1, _destroy: 1}, { person: max_roach }]
-
-    band.save # => false
-
-    band.memberships.collect { |m| m.errors.full_messages }
-    # => [ ... ["Person has already been taken"]]
 
 !SLIDE
 # ???

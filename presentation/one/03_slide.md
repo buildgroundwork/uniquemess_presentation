@@ -26,7 +26,8 @@
       def unique_memberships
         person_ids = memberships.reject(&:marked_for_destruction?).collect(&:person_id)
         if person_ids.size != person_ids.uniq.size
-          errors.add(:"memberships.person_id", I18n.translate('errors.messages.taken'))
+          errors.add(:"memberships.person_id",
+          I18n.translate('errors.messages.taken'))
         end
       end
     end
@@ -42,6 +43,8 @@
     # => ["Memberships person has already been taken"]
 
 !SLIDE small
+
+## However...
 
     @@@ Ruby
     band.memberships.create!(person: max) # => Success
