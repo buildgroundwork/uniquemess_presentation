@@ -2,6 +2,7 @@
 # What to Do When ActiveRecord Uniqueness Validations Fails
 ## Jonathan Mukai-Heidt & Masha Rikhter
 ## Groundwork Software
+## http://buildgroundwork.com
 
 !SLIDE
 # A familiar story...
@@ -48,11 +49,11 @@
 !SLIDE small
 
     @@@ Ruby
-    band.memberships << Membership.new(person: max_roach)
+    band.memberships.create!(person: max_roach)
     # => Success!
 
-    band.memberships << Membership.new(person: max_roach)
-    # => false
+    band.memberships.create!(person: max_roach)
+    # => ActiveRecord::RecordInvalid: Validation failed: Person has already been taken
 
     band.memberships.last.errors.full_messages
     # => ["Person has already been taken"]
@@ -80,7 +81,18 @@
     band.memberships.collect { |m| m.errors.full_messages }
     # => [["Person has already been taken"], ["Person has...
 
-!SLIDE delete and re-add with nested attributes - cut this one?
+!SLIDE small
+
+# Furthermore...
+
+    @@@ Ruby
+    band.memberships_attributes =
+    [{ id: 1, _destroy: 1}, { person: max_roach }]
+
+    band.save # => false
+
+    band.memberships.collect { |m| m.errors.full_messages }
+    # => [ ... ["Person has already been taken"]]
 
 !SLIDE
 # ???
